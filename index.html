@@ -1,64 +1,189 @@
-<aside id="sidebar" class=" fixed inset-y-0 left-0 z-40 w-64 bg-black border-r border-gray-900 flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out md:static">
-        <div class="p-6 border-b border-gray-900 mt-16 md:mt-0">
-            <div class="flex items-center space-x-3">
-                <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="w-10 h-10 rounded-full border border-gray-800" alt="Avatar">
-                <div class="overflow-hidden">
-                    <p class="text-sm font-bold truncate">00621ng_49671</p>
-                    <p class="text-[10px] text-gray-500 truncate">ID: 1457835980462620804</p>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LENNRANDA JOINER</title>
+    <link rel="icon" type="image/jpeg" href="/static/logo.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0a0b10; 
+            color: #ffffff;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at -10% 50%, rgba(0, 255, 136, 0.08), transparent 40%),
+                radial-gradient(circle at 110% 50%, rgba(255, 49, 49, 0.08), transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+            background-attachment: fixed;
+        }
+
+        .neon-green {
+            color: #00ff88 !important;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .neon-red {
+            color: #ff3131 !important;
+            text-shadow: 0 0 20px rgba(255, 49, 49, 0.5);
+        }
+
+        .btn-green {
+            background-color: #00ff88;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-dark {
+            background-color: #111111;
+            border: 1px solid #222222;
+            transition: all 0.3s ease;
+        }
+
+        .btn-dark:hover {
+            background-color: #1a1a1a;
+            border-color: #333333;
+            transform: translateY(-2px);
+        }
+
+        .badge-update {
+            background-color: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .online-dot {
+            height: 6px;
+            width: 6px;
+            background-color: #00ff88;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            box-shadow: 0 0 8px #00ff88;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative">
+    <!-- Navbar -->
+    <nav class="relative z-[100] flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 max-w-7xl mx-auto w-full">
+        <div class="flex items-center gap-3">
+            <img src="/static/logo.jpg" class="w-10 h-10 rounded-lg border border-white/10" alt="Logo">
+            <div class="flex flex-col">
+                <div class="flex items-center font-black italic text-lg sm:text-xl tracking-tighter">
+                    <span class="neon-green">LENN</span>
+                    <span class="neon-red">RANDA</span>
                 </div>
+                <span class="text-[8px] sm:text-[9px] font-bold text-gray-500 tracking-[0.3em] uppercase -mt-1">Joiner</span>
             </div>
         </div>
 
-        <div class="p-4 flex-grow space-y-2">
-                <div class="bg-[#111] rounded-xl overflow-hidden border border-gray-900 mb-6">
-                <div class="bg-red-500 p-2.5 text-center flex items-center justify-center space-x-2">
-                    
-                    <span class="text-[11px] font-black uppercase tracking-widest banner-text-light">
-                        NO ACTIVE PLAN
-                    </span>
-                </div>
-                <div class="p-4">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Balance</p>
-                    <div class="flex items-center justify-between">
-                        <span id="user-balance" class="text-xl font-black tracking-widest whitespace-nowrap mr-2">$ 2.00</span>
-                        <button onclick="openDepositModal()" class="flex items-center justify-center bg-emerald-500 hover:bg-emerald-400 text-black px-3 py-1.5 rounded-lg font-black uppercase tracking-widest text-[10px] transition-all shadow-lg shadow-emerald-500/20 group hover:scale-105 active:scale-95">
-                            <i class="fas fa-plus mr-1 group-hover:scale-110 transition-transform"></i> ADD
-                        </button>
+        <div class="relative z-[9999]">
+            
+                <div class="flex items-center bg-[#111111]/90 backdrop-blur-md border border-white/10 p-1 rounded-xl shadow-2xl relative overflow-visible">
+                    <div class="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 pointer-events-none select-none">
+                        
+                            <img src="https://cdn.discordapp.com/avatars/1457835980462620804/0391e016dcb9a4ccd8a8fb3091eb2c08.png" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-white/10" alt="Avatar">
+                        
+                        <span class="text-xs sm:text-sm font-black text-white tracking-tight">exel.dev</span>
                     </div>
+                    <a href="/logout" 
+                       id="logout-btn"
+                       class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-red-500/10 hover:bg-red-500/30 text-red-500 transition-all duration-300 hover:scale-105 border border-red-500/20 ml-1 relative z-[10000] cursor-pointer"
+                       onclick="window.location.href='/logout';">
+                        <i class="fas fa-sign-out-alt text-xs sm:text-sm pointer-events-none"></i>
+                    </a>
                 </div>
-            </div>
+            
+        </div>
+    </nav>
 
-            <nav class="space-y-1">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full sidebar-item hover-scale active flex items-center space-x-3 p-3 rounded-xl transition">
-                    <i class="fas fa-th-large w-5"></i>
-                    <span class="font-medium text-sm">Dashboard</span>
-                </button>
-                <button onclick="switchTab('purchase')" id="nav-purchase" class="w-full sidebar-item hover-scale flex items-center space-x-3 p-3 rounded-xl text-gray-400 transition">
-                    <i class="fas fa-shopping-cart w-5 neon-white"></i>
-                    <span class="font-medium text-sm">Purchase Plan</span>
-                </button>
-                <button onclick="switchTab('orders')" id="nav-orders" class="w-full sidebar-item hover-scale flex items-center space-x-3 p-3 rounded-xl text-gray-400 transition">
-                    <i class="fas fa-box w-5"></i>
-                    <span class="font-medium text-sm">Orders</span>
-                </button>
-                <a href="/logout" class="blacklist-allow w-full sidebar-item hover-scale flex items-center space-x-3 p-3 rounded-xl text-red-500/80 hover:text-red-500 transition">
-                    <i class="fas fa-sign-out-alt w-5"></i>
-                    <span class="font-medium text-sm">Logout</span>
+    <!-- Hero Content -->
+    <main class="flex-grow flex flex-col items-center justify-center px-6 text-center relative z-0 md:-mt-16">
+        
+
+        <!-- Update Badge -->
+        <div class="badge-update px-3 sm:px-4 py-1 sm:py-1.5 rounded-full mb-6 sm:mb-8 flex items-center">
+            <span class="online-dot"></span>
+            <span class="text-[9px] sm:text-[10px]">NEW UPDATE 2.0 AVAILABLE</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="text-5xl sm:text-7xl md:text-[9rem] font-black tracking-tighter uppercase leading-[0.8] mb-8 sm:mb-12 select-none flex items-center justify-center transition-all duration-700 hover:scale-[1.03] cursor-default group">
+            <span class="neon-green italic group-hover:drop-shadow-[0_0_30px_rgba(0,255,136,0.6)] transition-all duration-700">LENN</span><span class="neon-red italic group-hover:drop-shadow-[0_0_30px_rgba(255,49,49,0.6)] transition-all duration-700">RANDA</span>
+        </h1>
+
+        <!-- Description -->
+        <p class="text-gray-400 text-xs sm:text-sm md:text-lg max-w-3xl leading-relaxed mb-8 sm:mb-12 font-medium opacity-60 mx-auto">
+            Experience the next level of automation with the most advanced and accessible auto joiner on the market. 
+            Designed for elite collections, it allows you to get the most expensive brainrots effortlessly, 
+            keeping your costs to an absolute minimum.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-12 sm:mb-20 justify-center items-center w-full max-w-sm sm:max-w-none mx-auto">
+            
+                <a href="/dashboard" class="btn-green w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider flex items-center justify-center gap-3">
+                    Go to Dashboard <i class="fas fa-th-large text-xs"></i>
                 </a>
-            </nav>
+            
+            <a href="https://discord.gg/tCzD7e6BfZ" target="_blank" class="btn-dark w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider flex items-center justify-center gap-3">
+                <i class="fab fa-discord"></i> Community
+            </a>
         </div>
 
-        <div class="p-4 border-t border-gray-900 space-y-4">
-            <div class="pt-2">
-                <div class="flex items-center space-x-3 px-2">
-                    <img src="/static/logo.jpg" class="w-10 h-10 rounded-lg border border-white/10 shadow-lg object-cover" alt="Logo">
-                    <div class="overflow-hidden">
-                        <h2 class="font-black text-xs tracking-tighter uppercase leading-tight">
-                            <span class="neon-green">LENN</span><span class="neon-red">RANDA</span>
-                        </h2>
-                        <p class="text-[9px] text-gray-600 font-bold mt-0.5">v2.5 Premium</p>
-                    </div>
-                </div>
+        <!-- Stats -->
+        <div class="flex flex-wrap justify-center gap-8 sm:gap-12 md:gap-32 mt-8 sm:mt-12 mb-8 sm:mb-12">
+            <div class="flex flex-col items-center cursor-default">
+                <span class="text-2xl sm:text-3xl md:text-5xl font-black italic text-white/90">99.9%</span>
+                <span class="text-[8px] sm:text-[10px] text-gray-600 font-black uppercase tracking-[0.3em] mt-2">Uptime Reliability</span>
+            </div>
+            <div class="flex flex-col items-center cursor-default">
+                <span class="text-2xl sm:text-3xl md:text-5xl font-black italic text-white/90">24/7</span>
+                <span class="text-[8px] sm:text-[10px] text-gray-600 font-black uppercase tracking-[0.3em] mt-2">Instant Support</span>
             </div>
         </div>
-    </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-10 text-center">
+        <p class="text-[10px] text-gray-700 font-black uppercase tracking-[0.3em]">
+            &copy; 2025 LENNRANDA STORE. ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
+    <!-- Bottom Left Icon -->
+    <a href="https://discord.gg/tCzD7e6BfZ" target="_blank" class="fixed bottom-6 left-6 z-50 opacity-40 hover:opacity-100 transition-opacity">
+        <img src="/static/logo.jpg" 
+             class="w-12 h-12 rounded-lg shadow-2xl border border-white/10" alt="Lennranda Icon">
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    console.log('LOGOUT CLICKED');
+                    window.location.href = '/logout';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

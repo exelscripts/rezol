@@ -29,12 +29,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: opacity 0.5s ease;
     }
 
     h1 {
       color: #00bfff;
       text-align: center;
       font-size: 1.8em;
+      margin: 0;
+      padding-bottom: 20px;
     }
 
     /* Input Fields */
@@ -82,34 +85,36 @@
       border: 2px solid #00bfff;
       width: 350px;
       text-align: center;
+      transition: opacity 0.5s ease;
     }
 
-    /* Credit Card Form */
-    .credit-card-form {
+    /* Purchase Section */
+    .purchase-container {
       display: none;
       margin-top: 20px;
-      text-align: left;
+      text-align: center;
+      transition: opacity 0.5s ease;
     }
 
-    .credit-card-form input,
-    .credit-card-form button {
-      width: 100%;
+    .purchase-container input {
+      width: 90%;
       padding: 12px;
       margin: 10px 0;
+      border: 1px solid #00bfff;
       border-radius: 15px;
       background: linear-gradient(to right, #2e2e2e, #555555);
       color: white;
       font-size: 14px;
     }
 
-    .credit-card-form input:focus,
-    .credit-card-form button:focus {
-      outline: none;
-      box-shadow: 0 0 5px #00bfff;
-    }
-
-    .credit-card-form button {
+    .purchase-container button {
+      width: 90%;
+      padding: 12px;
       background: linear-gradient(to right, #555555, #2e2e2e);
+      border: none;
+      border-radius: 15px;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
     }
 
@@ -136,9 +141,35 @@
       color: #00bfff;
       margin-bottom: 15px;
     }
+
+    /* Green Message - Copied Key */
+    .green-message {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .green-message.show {
+      display: block;
+      animation: fadeIn 2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
+  <div class="green-message" id="green-message">COPIED KEY</div>
+
   <!-- Login Container -->
   <div class="container" id="login-container">
     <h1>Login</h1>
@@ -151,8 +182,14 @@
   <div class="balance-container" id="balance-container">
     <h1>Welcome, <span id="user-name"></span></h1>
     <div class="balance-text">Balance: $<span id="balance-amount">0</span></div>
+    <button class="button" onclick="togglePurchaseSection()">Purchase</button>
     <button class="button" onclick="toggleCreditCardForm()">Add Balance</button>
-    <div class="credit-card-form" id="credit-card-form">
+    <div class="purchase-container" id="purchase-container">
+      <h2>Buy Time</h2>
+      <input type="number" id="hours-to-buy" placeholder="Number of hours" min="1">
+      <button onclick="purchaseHours()">Purchase</button>
+    </div>
+    <div class="credit-card-form" id="credit-card-form" style="display: none;">
       <h2>Credit Card Details</h2>
       <input type="text" placeholder="Card Number" id="card-number">
       <input type="text" placeholder="Expiry Date" id="expiry-date">
@@ -167,7 +204,6 @@
     let loggedIn = false;
     let balance = 0;
 
-    // Check login status
     function checkLoginStatus() {
       const loginContainer = document.getElementById('login-container');
       const balanceContainer = document.getElementById('balance-container');
@@ -176,14 +212,13 @@
       if (loggedIn) {
         loginContainer.style.display = 'none';
         balanceContainer.style.display = 'block';
-        userNameDisplay.textContent = document.getElementById('username').value;  // Display the username
+        userNameDisplay.textContent = document.getElementById('username').value;
       } else {
         loginContainer.style.display = 'block';
         balanceContainer.style.display = 'none';
       }
     }
 
-    // Create Account
     function createAccount() {
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
@@ -197,7 +232,6 @@
       }
     }
 
-    // Log Out
     function logout() {
       loggedIn = false;
       balance = 0;
@@ -205,20 +239,22 @@
       checkLoginStatus();
     }
 
-    // Toggle Credit Card Form
+    function togglePurchaseSection() {
+      const section = document.getElementById('purchase-container');
+      section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+
     function toggleCreditCardForm() {
       const form = document.getElementById('credit-card-form');
       form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Add Balance
     function submitCardDetails() {
       const cardNumber = document.getElementById('card-number').value;
       const expiryDate = document.getElementById('expiry-date').value;
       const cvv = document.getElementById('cvv').value;
       const addAmount = document.getElementById('add-amount').value;
 
-      // Validate amount is a number
       if (isNaN(addAmount) || addAmount <= 0) {
         alert('Please enter a valid amount.');
         return;
@@ -232,6 +268,56 @@
       } else {
         alert('Please fill in all the details.');
       }
+    }
+
+    function purchaseHours() {
+      const hours = document.getElementById('hours-to-buy').value;
+      const totalCost = hours * 4;  // $4 per hour
+
+      if (isNaN(hours) || hours <= 0) {
+        alert('Please enter a valid number of hours.');
+        return;
+      }
+
+      if (balance >= totalCost) {
+        balance -= totalCost;
+        document.getElementById('balance-amount').textContent = balance.toFixed(2);
+        generateKey();
+      } else {
+        alert('Insufficient balance!');
+      }
+    }
+
+    function generateKey() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let key = '';
+      for (let i = 0; i < 20; i++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      alert('Purchase successful!');
+      displayGeneratedKey(key);
+    }
+
+    function displayGeneratedKey(key) {
+      const keyDisplay = document.createElement('div');
+      keyDisplay.textContent = `Your key: ${key}`;
+      const copyButton = document.createElement('button');
+      copyButton.textContent = 'Copy';
+      copyButton.onclick = function() {
+        navigator.clipboard.writeText(key).then(function() {
+          showGreenMessage();
+        });
+      };
+      keyDisplay.appendChild(copyButton);
+      document.getElementById('purchase-container').appendChild(keyDisplay);
+    }
+
+    function showGreenMessage() {
+      const message = document.getElementById('green-message');
+      message.classList.add('show');
+      setTimeout(function() {
+        message.classList.remove('show');
+      }, 3000);
     }
 
     // Initial check

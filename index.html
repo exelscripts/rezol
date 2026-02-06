@@ -1,39 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clean Website</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    /* Body and Background */
+    body {
+      background: linear-gradient(to right, #000000, #434343); /* Black Gradient */
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+    }
+
+    /* Container for the Login Form */
+    .login-container {
+      background: rgba(0, 0, 0, 0.7); /* Slightly transparent black */
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border: 2px solid #00bfff; /* Light blue outline */
+    }
+
+    h1 {
+      text-align: center;
+      color: #00bfff;
+    }
+
+    /* Form Fields */
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #00bfff;
+      border-radius: 5px;
+      background: linear-gradient(to right, #2e2e2e, #555555); /* Dark grey gradient */
+      color: white;
+      font-size: 16px;
+    }
+
+    .input-field:focus {
+      outline: none;
+      box-shadow: 0 0 5px #00bfff;
+    }
+
+    /* Button */
+    .button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #555555, #2e2e2e); /* Dark grey gradient */
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background: linear-gradient(to right, #2e2e2e, #555555);
+      box-shadow: 0 0 8px #00bfff;
+    }
+
+    /* Logout Button */
+    .logout-btn {
+      width: 100%;
+      padding: 12px;
+      background: #c0392b; /* Red for Logout */
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .logout-btn:hover {
+      background: #e74c3c;
+    }
+
+    /* Hidden when logged in */
+    .logged-in {
+      display: none;
+    }
+
+  </style>
 </head>
 <body>
-    <!-- Header with Navigation -->
-    <header>
-        <div class="logo">
-            <h1>Clean Site</h1>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  <div class="login-container">
+    <h1>Login</h1>
+    <div class="login-form">
+      <input type="text" class="input-field" id="username" placeholder="Username">
+      <input type="password" class="input-field" id="password" placeholder="Password">
+      <button class="button" onclick="createAccount()">Create Account</button>
+      <button class="logout-btn logged-in" onclick="logout()">Log Out</button>
+    </div>
+  </div>
 
-    <!-- Main Content Section -->
-    <main>
-        <section class="intro">
-            <h2>Welcome to Clean, Modern Design</h2>
-            <p>Discover an innovative and clean approach to web design.</p>
-            <button class="cta-button">Get Started</button>
-        </section>
-    </main>
+  <script>
+    let loggedIn = false;
 
-    <!-- Footer Section -->
-    <footer>
-        <p>&copy; 2026 Clean Website. All rights reserved.</p>
-    </footer>
+    // Check if user is logged in
+    function checkLoginStatus() {
+      const loginButton = document.querySelector('.button');
+      const logoutButton = document.querySelector('.logout-btn');
+      const usernameField = document.getElementById('username');
+      const passwordField = document.getElementById('password');
+
+      if (loggedIn) {
+        loginButton.style.display = 'none'; // Hide create account button
+        logoutButton.style.display = 'block'; // Show logout button
+      } else {
+        loginButton.style.display = 'block'; // Show create account button
+        logoutButton.style.display = 'none'; // Hide logout button
+      }
+    }
+
+    // Create Account Function
+    function createAccount() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username && password) {
+        alert('Account created and logged in as: ' + username);
+        loggedIn = true;
+        checkLoginStatus();
+      } else {
+        alert('Please enter a username and password.');
+      }
+    }
+
+    // Log out function
+    function logout() {
+      loggedIn = false;
+      alert('Logged out.');
+      checkLoginStatus();
+    }
+
+    // Initial Check
+    checkLoginStatus();
+  </script>
 </body>
 </html>

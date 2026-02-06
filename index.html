@@ -21,11 +21,11 @@
     /* Container for the UI */
     .container {
       background: rgba(0, 0, 0, 0.8); /* Slightly transparent black */
-      border-radius: 10px;
+      border-radius: 20px; /* Rounded edges for the container */
       padding: 30px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       border: 2px solid #00bfff; /* Light blue outline */
-      width: 400px;
+      width: 350px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -34,16 +34,16 @@
     h1 {
       color: #00bfff;
       text-align: center;
-      font-size: 2em;
+      font-size: 1.8em;
     }
 
     /* Input Fields */
     .input-field {
-      width: 100%;
+      width: 90%;
       padding: 12px;
       margin: 10px 0;
       border: 1px solid #00bfff;
-      border-radius: 5px;
+      border-radius: 15px; /* Rounded input fields */
       background: linear-gradient(to right, #2e2e2e, #555555); /* Dark grey gradient */
       color: white;
       font-size: 14px;
@@ -56,11 +56,11 @@
 
     /* Button */
     .button {
-      width: 100%;
+      width: 90%;
       padding: 12px;
       background: linear-gradient(to right, #555555, #2e2e2e); /* Dark grey gradient */
       border: none;
-      border-radius: 5px;
+      border-radius: 15px; /* Rounded button */
       color: white;
       font-size: 16px;
       cursor: pointer;
@@ -76,53 +76,50 @@
     .balance-container {
       display: none; /* Hidden initially */
       background: rgba(0, 0, 0, 0.8); /* Same style as login container */
-      border-radius: 10px;
+      border-radius: 20px; /* Rounded container */
       padding: 30px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       border: 2px solid #00bfff;
-      width: 400px;
+      width: 350px;
       text-align: center;
     }
 
+    /* Credit Card Form */
     .credit-card-form {
       display: none;
       margin-top: 20px;
       text-align: left;
     }
 
-    .credit-card-form input {
+    .credit-card-form input,
+    .credit-card-form button {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
-      border: 1px solid #00bfff;
-      border-radius: 5px;
+      border-radius: 15px;
       background: linear-gradient(to right, #2e2e2e, #555555);
       color: white;
       font-size: 14px;
     }
 
+    .credit-card-form input:focus,
+    .credit-card-form button:focus {
+      outline: none;
+      box-shadow: 0 0 5px #00bfff;
+    }
+
     .credit-card-form button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(to right, #2e2e2e, #555555);
-      border: none;
-      border-radius: 5px;
-      color: white;
-      font-size: 16px;
+      background: linear-gradient(to right, #555555, #2e2e2e);
       cursor: pointer;
     }
 
-    .credit-card-form button:hover {
-      background: linear-gradient(to right, #555555, #2e2e2e);
-      box-shadow: 0 0 8px #00bfff;
-    }
-
+    /* Logout Button */
     .logout-btn {
-      width: 100%;
+      width: 90%;
       padding: 12px;
       background: #c0392b; /* Red for Logout */
       border: none;
-      border-radius: 5px;
+      border-radius: 15px;
       color: white;
       font-size: 16px;
       cursor: pointer;
@@ -132,9 +129,17 @@
     .logout-btn:hover {
       background: #e74c3c;
     }
+
+    /* Balance Text */
+    .balance-text {
+      font-size: 1.2em;
+      color: #00bfff;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
+  <!-- Login Container -->
   <div class="container" id="login-container">
     <h1>Login</h1>
     <input type="text" class="input-field" id="username" placeholder="Username">
@@ -142,14 +147,17 @@
     <button class="button" onclick="createAccount()">Create Account</button>
   </div>
 
+  <!-- Balance Page (After login) -->
   <div class="balance-container" id="balance-container">
-    <h1>Welcome to Your Account</h1>
+    <h1>Welcome, <span id="user-name"></span></h1>
+    <div class="balance-text">Balance: $<span id="balance-amount">0</span></div>
     <button class="button" onclick="toggleCreditCardForm()">Add Balance</button>
     <div class="credit-card-form" id="credit-card-form">
       <h2>Credit Card Details</h2>
       <input type="text" placeholder="Card Number" id="card-number">
       <input type="text" placeholder="Expiry Date" id="expiry-date">
       <input type="text" placeholder="CVV" id="cvv">
+      <input type="number" id="add-amount" placeholder="How much would you like to add?" min="1">
       <button onclick="submitCardDetails()">Submit</button>
     </div>
     <button class="logout-btn" onclick="logout()">Log Out</button>
@@ -157,20 +165,25 @@
 
   <script>
     let loggedIn = false;
+    let balance = 0;
 
+    // Check login status
     function checkLoginStatus() {
       const loginContainer = document.getElementById('login-container');
       const balanceContainer = document.getElementById('balance-container');
+      const userNameDisplay = document.getElementById('user-name');
 
       if (loggedIn) {
         loginContainer.style.display = 'none';
         balanceContainer.style.display = 'block';
+        userNameDisplay.textContent = document.getElementById('username').value;  // Display the username
       } else {
         loginContainer.style.display = 'block';
         balanceContainer.style.display = 'none';
       }
     }
 
+    // Create Account
     function createAccount() {
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
@@ -184,27 +197,40 @@
       }
     }
 
+    // Log Out
     function logout() {
       loggedIn = false;
+      balance = 0;
       alert('Logged out.');
       checkLoginStatus();
     }
 
+    // Toggle Credit Card Form
     function toggleCreditCardForm() {
       const form = document.getElementById('credit-card-form');
       form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
 
+    // Add Balance
     function submitCardDetails() {
       const cardNumber = document.getElementById('card-number').value;
       const expiryDate = document.getElementById('expiry-date').value;
       const cvv = document.getElementById('cvv').value;
+      const addAmount = document.getElementById('add-amount').value;
 
-      if (cardNumber && expiryDate && cvv) {
-        alert('Card details submitted successfully!');
+      // Validate amount is a number
+      if (isNaN(addAmount) || addAmount <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+      }
+
+      if (cardNumber && expiryDate && cvv && addAmount) {
+        balance += parseFloat(addAmount);
+        alert(`Card details submitted successfully! You added $${addAmount} to your balance.`);
+        document.getElementById('balance-amount').textContent = balance.toFixed(2);
         document.getElementById('credit-card-form').style.display = 'none';
       } else {
-        alert('Please fill in all the card details.');
+        alert('Please fill in all the details.');
       }
     }
 

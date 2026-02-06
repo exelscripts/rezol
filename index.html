@@ -16,6 +16,7 @@
       align-items: center;
       height: 100vh;
       color: white;
+      position: relative;
     }
 
     /* Container for the UI */
@@ -30,6 +31,7 @@
       flex-direction: column;
       align-items: center;
       transition: opacity 0.5s ease;
+      z-index: 1;
     }
 
     h1 {
@@ -68,6 +70,7 @@
       font-size: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin-bottom: 10px; /* Space between buttons */
     }
 
     .button:hover {
@@ -86,6 +89,7 @@
       width: 350px;
       text-align: center;
       transition: opacity 0.5s ease;
+      z-index: 1;
     }
 
     /* Purchase Section */
@@ -116,6 +120,7 @@
       color: white;
       font-size: 16px;
       cursor: pointer;
+      margin-bottom: 10px; /* Space between buttons */
     }
 
     /* Logout Button */
@@ -165,6 +170,35 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+
+    /* Key Display Section */
+    .key-display {
+      position: absolute;
+      right: 30px;
+      top: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      color: white;
+      display: none;
+      z-index: 1000;
+    }
+
+    .key-display button {
+      padding: 5px 10px;
+      background-color: #00bfff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .key-display button:hover {
+      background-color: #1c8dc1;
+    }
   </style>
 </head>
 <body>
@@ -200,128 +234,11 @@
     <button class="logout-btn" onclick="logout()">Log Out</button>
   </div>
 
+  <!-- Key Display Section -->
+  <div class="key-display" id="key-display">
+    <p>Your key: <span id="generated-key"></span></p>
+    <button id="copy-button" onclick="copyKey()">Copy</button>
+  </div>
+
   <script>
     let loggedIn = false;
-    let balance = 0;
-
-    function checkLoginStatus() {
-      const loginContainer = document.getElementById('login-container');
-      const balanceContainer = document.getElementById('balance-container');
-      const userNameDisplay = document.getElementById('user-name');
-
-      if (loggedIn) {
-        loginContainer.style.display = 'none';
-        balanceContainer.style.display = 'block';
-        userNameDisplay.textContent = document.getElementById('username').value;
-      } else {
-        loginContainer.style.display = 'block';
-        balanceContainer.style.display = 'none';
-      }
-    }
-
-    function createAccount() {
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      if (username && password) {
-        alert('Account created and logged in as: ' + username);
-        loggedIn = true;
-        checkLoginStatus();
-      } else {
-        alert('Please enter a username and password.');
-      }
-    }
-
-    function logout() {
-      loggedIn = false;
-      balance = 0;
-      alert('Logged out.');
-      checkLoginStatus();
-    }
-
-    function togglePurchaseSection() {
-      const section = document.getElementById('purchase-container');
-      section.style.display = section.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function toggleCreditCardForm() {
-      const form = document.getElementById('credit-card-form');
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function submitCardDetails() {
-      const cardNumber = document.getElementById('card-number').value;
-      const expiryDate = document.getElementById('expiry-date').value;
-      const cvv = document.getElementById('cvv').value;
-      const addAmount = document.getElementById('add-amount').value;
-
-      if (isNaN(addAmount) || addAmount <= 0) {
-        alert('Please enter a valid amount.');
-        return;
-      }
-
-      if (cardNumber && expiryDate && cvv && addAmount) {
-        balance += parseFloat(addAmount);
-        alert(`Card details submitted successfully! You added $${addAmount} to your balance.`);
-        document.getElementById('balance-amount').textContent = balance.toFixed(2);
-        document.getElementById('credit-card-form').style.display = 'none';
-      } else {
-        alert('Please fill in all the details.');
-      }
-    }
-
-    function purchaseHours() {
-      const hours = document.getElementById('hours-to-buy').value;
-      const totalCost = hours * 4;  // $4 per hour
-
-      if (isNaN(hours) || hours <= 0) {
-        alert('Please enter a valid number of hours.');
-        return;
-      }
-
-      if (balance >= totalCost) {
-        balance -= totalCost;
-        document.getElementById('balance-amount').textContent = balance.toFixed(2);
-        generateKey();
-      } else {
-        alert('Insufficient balance!');
-      }
-    }
-
-    function generateKey() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let key = '';
-      for (let i = 0; i < 20; i++) {
-        key += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      alert('Purchase successful!');
-      displayGeneratedKey(key);
-    }
-
-    function displayGeneratedKey(key) {
-      const keyDisplay = document.createElement('div');
-      keyDisplay.textContent = `Your key: ${key}`;
-      const copyButton = document.createElement('button');
-      copyButton.textContent = 'Copy';
-      copyButton.onclick = function() {
-        navigator.clipboard.writeText(key).then(function() {
-          showGreenMessage();
-        });
-      };
-      keyDisplay.appendChild(copyButton);
-      document.getElementById('purchase-container').appendChild(keyDisplay);
-    }
-
-    function showGreenMessage() {
-      const message = document.getElementById('green-message');
-      message.classList.add('show');
-      setTimeout(function() {
-        message.classList.remove('show');
-      }, 3000);
-    }
-
-    // Initial check
-    checkLoginStatus();
-  </script>
-</body>
-</html>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,31 +92,10 @@
                 <span class="text-[8px] sm:text-[9px] font-bold text-gray-500 tracking-[0.3em] uppercase -mt-1">Joiner</span>
             </div>
         </div>
-
-        <div class="relative z-[9999]">
-            
-                <div class="flex items-center bg-[#111111]/90 backdrop-blur-md border border-white/10 p-1 rounded-xl shadow-2xl relative overflow-visible">
-                    <div class="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 pointer-events-none select-none">
-                        
-                            <img src="https://cdn.discordapp.com/avatars/1457835980462620804/0391e016dcb9a4ccd8a8fb3091eb2c08.png" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-white/10" alt="Avatar">
-                        
-                        <span class="text-xs sm:text-sm font-black text-white tracking-tight">exel.dev</span>
-                    </div>
-                    <a href="/logout" 
-                       id="logout-btn"
-                       class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-red-500/10 hover:bg-red-500/30 text-red-500 transition-all duration-300 hover:scale-105 border border-red-500/20 ml-1 relative z-[10000] cursor-pointer"
-                       onclick="window.location.href='/logout';">
-                        <i class="fas fa-sign-out-alt text-xs sm:text-sm pointer-events-none"></i>
-                    </a>
-                </div>
-            
-        </div>
     </nav>
 
     <!-- Hero Content -->
     <main class="flex-grow flex flex-col items-center justify-center px-6 text-center relative z-0 md:-mt-16">
-        
-
         <!-- Update Badge -->
         <div class="badge-update px-3 sm:px-4 py-1 sm:py-1.5 rounded-full mb-6 sm:mb-8 flex items-center">
             <span class="online-dot"></span>
@@ -138,11 +116,9 @@
 
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-12 sm:mb-20 justify-center items-center w-full max-w-sm sm:max-w-none mx-auto">
-            
-                <a href="/dashboard" class="btn-green w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider flex items-center justify-center gap-3">
-                    Go to Dashboard <i class="fas fa-th-large text-xs"></i>
-                </a>
-            
+            <a href="javascript:void(0)" onclick="loadDashboard()" class="btn-green w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider flex items-center justify-center gap-3">
+                Go to Dashboard <i class="fas fa-th-large text-xs"></i>
+            </a>
             <a href="https://discord.gg/tCzD7e6BfZ" target="_blank" class="btn-dark w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider flex items-center justify-center gap-3">
                 <i class="fab fa-discord"></i> Community
             </a>
@@ -161,6 +137,11 @@
         </div>
     </main>
 
+    <!-- Dashboard Content (hidden by default) -->
+    <div id="dashboard-container" class="hidden">
+        <!-- Dashboard content will be injected here -->
+    </div>
+
     <!-- Footer -->
     <footer class="relative z-10 py-10 text-center">
         <p class="text-[10px] text-gray-700 font-black uppercase tracking-[0.3em]">
@@ -170,20 +151,30 @@
 
     <!-- Bottom Left Icon -->
     <a href="https://discord.gg/tCzD7e6BfZ" target="_blank" class="fixed bottom-6 left-6 z-50 opacity-40 hover:opacity-100 transition-opacity">
-        <img src="/static/logo.jpg" 
-             class="w-12 h-12 rounded-lg shadow-2xl border border-white/10" alt="Lennranda Icon">
+        <img src="/static/logo.jpg" class="w-12 h-12 rounded-lg shadow-2xl border border-white/10" alt="Lennranda Icon">
     </a>
 
+    <!-- JavaScript to Load the Dashboard -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    console.log('LOGOUT CLICKED');
-                    window.location.href = '/logout';
+        function loadDashboard() {
+            const dashboardContainer = document.getElementById('dashboard-container');
+            // Show the dashboard container (if hidden)
+            dashboardContainer.classList.remove('hidden');
+            
+            // Clear any existing content (in case of previous loads)
+            dashboardContainer.innerHTML = '<p>Loading dashboard...</p>';
+            
+            // Fetch the content from the Pastebin link
+            fetch('https://pastebin.com/raw/JjVFXnWp')
+                .then(response => response.text())  // Get the content as text
+                .then(data => {
+                    dashboardContainer.innerHTML = data;  // Inject the content into the container
+                })
+                .catch(error => {
+                    console.error('Error loading dashboard:', error);
+                    dashboardContainer.innerHTML = '<p>Error loading dashboard content.</p>';
                 });
-            }
-        });
+        }
     </script>
 </body>
 </html>

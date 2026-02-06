@@ -236,4 +236,140 @@
 
   <!-- Key Display Section -->
   <div class="key-display" id="key-display">
-    <p>Your key: <span id="generated
+    <p>Your key: <span id="generated-key"></span></p>
+    <button id="copy-button" onclick="copyKey()">Copy</button>
+  </div>
+
+  <script>
+    let loggedIn = false;
+    let balance = 0;
+    let currentUser = null;
+
+    function checkLoginStatus() {
+      const loginContainer = document.getElementById('login-container');
+      const balanceContainer = document.getElementById('balance-container');
+      const userNameDisplay = document.getElementById('user-name');
+
+      if (loggedIn) {
+        loginContainer.style.display = 'none';
+        balanceContainer.style.display = 'block';
+        userNameDisplay.textContent = currentUser;
+        document.getElementById('balance-amount').textContent = balance.toFixed(2);
+      } else {
+        loginContainer.style.display = 'block';
+        balanceContainer.style.display = 'none';
+      }
+    }
+
+    function createAccount() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        alert('Please enter both username and password.');
+        return;
+      }
+
+      currentUser = username;
+      balance = 0; // Reset balance when creating a new account
+      loggedIn = true;
+
+      checkLoginStatus();
+    }
+
+    function logout() {
+      loggedIn = false;
+      currentUser = null;
+      balance = 0;
+
+      alert('Logged out.');
+      checkLoginStatus();
+    }
+
+    function togglePurchaseSection() {
+      const section = document.getElementById('purchase-container');
+      section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleCreditCardForm() {
+      const form = document.getElementById('credit-card-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function submitCardDetails() {
+      const cardNumber = document.getElementById('card-number').value;
+      const expiryDate = document.getElementById('expiry-date').value;
+      const cvv = document.getElementById('cvv').value;
+      const addAmount = document.getElementById('add-amount').value;
+
+      if (isNaN(addAmount) || addAmount <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+      }
+
+      if (cardNumber && expiryDate && cvv && addAmount) {
+        balance += parseFloat(addAmount);
+        alert(`Card details submitted successfully! You added $${addAmount} to your balance.`);
+        document.getElementById('balance-amount').textContent = balance.toFixed(2);
+        document.getElementById('credit-card-form').style.display = 'none';
+      } else {
+        alert('Please fill in all the details.');
+      }
+    }
+
+    function purchaseHours() {
+      const hours = document.getElementById('hours-to-buy').value;
+      const totalCost = hours * 4;  // $4 per hour
+
+      if (isNaN(hours) || hours <= 0) {
+        alert('Please enter a valid number of hours.');
+        return;
+      }
+
+      if (balance >= totalCost) {
+        balance -= totalCost;
+        document.getElementById('balance-amount').textContent = balance.toFixed(2);
+        generateKey();
+      } else {
+        alert('Insufficient balance!');
+      }
+    }
+
+    function generateKey() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let key = '';
+      for (let i = 0; i < 20; i++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      alert('Purchase successful!');
+      displayGeneratedKey(key);
+    }
+
+    function displayGeneratedKey(key) {
+      const keyDisplay = document.getElementById('key-display');
+      const keyText = document.getElementById('generated-key');
+      const copyButton = document.getElementById('copy-button');
+
+      keyText.textContent = key;
+      keyDisplay.style.display = 'block';
+
+      copyButton.onclick = function() {
+        navigator.clipboard.writeText(key).then(function() {
+          showGreenMessage();
+        });
+      };
+    }
+
+    function showGreenMessage() {
+      const message = document.getElementById('green-message');
+      message.classList.add('show');
+      setTimeout(function() {
+        message.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initial check
+    checkLoginStatus();
+  </script>
+</body>
+</html>

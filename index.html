@@ -1,343 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
-  <style>
-    /* Body and Background */
-    body {
-      background: linear-gradient(135deg, #1e1e1e, #333333); /* Clean, modern black gradient */
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: white;
-      position: relative;
-    }
+function createAccount() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-    /* Container for the UI */
-    .container {
-      background: rgba(0, 0, 0, 0.8); /* Slightly transparent black */
-      border-radius: 20px; /* Rounded edges for the container */
-      padding: 30px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      border: 2px solid #00bfff; /* Light blue outline */
-      width: 350px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: opacity 0.5s ease;
-      z-index: 1;
-    }
+  if (!username || !password) {
+    alert('Please enter both username and password.');
+    return;
+  }
 
-    h1 {
-      color: #00bfff;
-      text-align: center;
-      font-size: 1.8em;
-      margin: 0;
-      padding-bottom: 20px;
-    }
+  currentUser = username;
+  balance = 0; // Reset balance when creating a new account
+  loggedIn = true;
 
-    /* Input Fields */
-    .input-field {
-      width: 90%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #00bfff;
-      border-radius: 15px; /* Rounded input fields */
-      background: linear-gradient(to right, #2e2e2e, #555555); /* Dark grey gradient */
-      color: white;
-      font-size: 14px;
-    }
+  checkLoginStatus();
+}
 
-    .input-field:focus {
-      outline: none;
-      box-shadow: 0 0 5px #00bfff;
-    }
+function togglePurchaseSection() {
+  const purchaseSection = document.getElementById('purchase-container');
+  purchaseSection.style.display = purchaseSection.style.display === 'none' ? 'block' : 'none';
+}
 
-    /* Button */
-    .button {
-      width: 90%;
-      padding: 12px;
-      background: linear-gradient(to right, #555555, #2e2e2e); /* Dark grey gradient */
-      border: none;
-      border-radius: 15px; /* Rounded button */
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 10px; /* Space between buttons */
-    }
+function updatePrice() {
+  const hours = document.getElementById('hours-to-buy').value;
+  if (hours < 2) {
+    document.getElementById('hours-to-buy').value = 2;
+  }
+  const totalCost = hours * 4;
+  document.getElementById('total-cost').textContent = totalCost;
+}
 
-    .button:hover {
-      background: linear-gradient(to right, #2e2e2e, #555555);
-      box-shadow: 0 0 8px #00bfff;
-    }
+function purchaseHours() {
+  const hours = document.getElementById('hours-to-buy').value;
+  const totalCost = hours * 4;
 
-    /* Add Balance Page (After login) */
-    .balance-container {
-      display: none; /* Hidden initially */
-      background: rgba(0, 0, 0, 0.8); /* Same style as login container */
-      border-radius: 20px; /* Rounded container */
-      padding: 30px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      border: 2px solid #00bfff;
-      width: 350px;
-      text-align: center;
-      transition: opacity 0.5s ease;
-      z-index: 1;
-    }
+  if (balance >= totalCost) {
+    balance -= totalCost;
+    document.getElementById('balance-amount').textContent = balance.toFixed(2);
+    generateKey();
+  } else {
+    alert('Insufficient balance!');
+  }
+}
 
-    /* Purchase Section */
-    .purchase-container {
-      position: absolute;
-      right: 30px;
-      top: 100px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      border: 2px solid #00bfff;
-      width: 300px;
-      display: none;
-      text-align: center;
-      z-index: 1000;
-    }
+function generateKey() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let key = '';
+  for (let i = 0; i < 20; i++) {
+    key += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  displayGeneratedKey(key);
+}
 
-    .purchase-container h2 {
-      color: #00bfff;
-    }
+function displayGeneratedKey(key) {
+  const keyDisplay = document.getElementById('key-display');
+  const keyText = document.getElementById('generated-key');
+  const copyButton = document.getElementById('copy-button');
 
-    .purchase-container input {
-      width: 90%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #00bfff;
-      border-radius: 15px;
-      background: linear-gradient(to right, #2e2e2e, #555555);
-      color: white;
-      font-size: 14px;
-    }
+  keyText.textContent = key;
+  keyDisplay.style.display = 'block';
 
-    .purchase-container button {
-      width: 90%;
-      padding: 12px;
-      background: linear-gradient(to right, #555555, #2e2e2e);
-      border: none;
-      border-radius: 15px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
+  copyButton.onclick = function() {
+    navigator.clipboard.writeText(key).then(function() {
+      showGreenMessage();
+    });
+  };
+}
 
-    .purchase-container button:hover {
-      background: linear-gradient(to right, #2e2e2e, #555555);
-      box-shadow: 0 0 8px #00bfff;
-    }
+function showGreenMessage() {
+  const message = document.getElementById('green-message');
+  message.classList.add('show');
+  setTimeout(function() {
+    message.classList.remove('show');
+  }, 3000);
+}
 
-    .purchase-container .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: #ff6347;
-      cursor: pointer;
-      font-size: 20px;
-    }
-
-    /* Green Message - Copied Key */
-    .green-message {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: none;
-      z-index: 1000;
-    }
-
-    .green-message.show {
-      display: block;
-      animation: fadeIn 2s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Key Display Section */
-    .key-display {
-      position: absolute;
-      right: 30px;
-      top: 10px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 15px;
-      padding: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      color: white;
-      display: none;
-      z-index: 1000;
-    }
-
-    .key-display button {
-      padding: 5px 10px;
-      background-color: #00bfff;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    .key-display button:hover {
-      background-color: #1c8dc1;
-    }
-  </style>
-</head>
-<body>
-  <div class="green-message" id="green-message">COPIED KEY</div>
-
-  <!-- Login Container -->
-  <div class="container" id="login-container">
-    <h1>Login</h1>
-    <input type="text" class="input-field" id="username" placeholder="Username">
-    <input type="password" class="input-field" id="password" placeholder="Password">
-    <button class="button" onclick="createAccount()">Create Account</button>
-  </div>
-
-  <!-- Balance Page (After login) -->
-  <div class="balance-container" id="balance-container">
-    <h1>Welcome, <span id="user-name"></span></h1>
-    <div class="balance-text">Balance: $<span id="balance-amount">0</span></div>
-    <button class="button" onclick="togglePurchaseSection()">Purchase</button>
-    <button class="button" onclick="toggleCreditCardForm()">Add Balance</button>
-  </div>
-
-  <!-- Purchase Section -->
-  <div class="purchase-container" id="purchase-container">
-    <span class="close-btn" onclick="togglePurchaseSection()">×</span>
-    <h2>Purchase Time</h2>
-    <input type="number" id="hours-to-buy" placeholder="Number of hours" min="2" onchange="updatePrice()">
-    <p>Total Cost: $<span id="total-cost">8</span></p>
-    <button onclick="purchaseHours()">Buy</button>
-  </div>
-
-  <!-- Key Display Section -->
-  <div class="key-display" id="key-display">
-    <p>Your key: <span id="generated-key"></span></p>
-    <button id="copy-button" onclick="copyKey()">Copy</button>
-  </div>
-
-  <script>
-    let loggedIn = false;
-    let balance = 0;
-    let currentUser = null;
-
-    function checkLoginStatus() {
-      const loginContainer = document.getElementById('login-container');
-      const balanceContainer = document.getElementById('balance-container');
-      const userNameDisplay = document.getElementById('user-name');
-
-      if (loggedIn) {
-        loginContainer.style.display = 'none';
-        balanceContainer.style.display = 'block';
-        userNameDisplay.textContent = currentUser;
-        document.getElementById('balance-amount').textContent = balance.toFixed(2);
-      } else {
-        loginContainer.style.display = 'block';
-        balanceContainer.style.display = 'none';
-      }
-    }
-
-    function createAccount() {
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      if (!username || !password) {
-        alert('Please enter both username and password.');
-        return;
-      }
-
-      currentUser = username;
-      balance = 0; // Reset balance when creating a new account
-      loggedIn = true;
-
-      checkLoginStatus();
-    }
-
-    function togglePurchaseSection() {
-      const purchaseSection = document.getElementById('purchase-container');
-      purchaseSection.style.display = purchaseSection.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function updatePrice() {
-      const hours = document.getElementById('hours-to-buy').value;
-      if (hours < 2) {
-        document.getElementById('hours-to-buy').value = 2;
-      }
-      const totalCost = hours * 4;
-      document.getElementById('total-cost').textContent = totalCost;
-    }
-
-    function purchaseHours() {
-      const hours = document.getElementById('hours-to-buy').value;
-      const totalCost = hours * 4;
-
-      if (balance >= totalCost) {
-        balance -= totalCost;
-        document.getElementById('balance-amount').textContent = balance.toFixed(2);
-        generateKey();
-      } else {
-        alert('Insufficient balance!');
-      }
-    }
-
-    function generateKey() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let key = '';
-      for (let i = 0; i < 20; i++) {
-        key += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      displayGeneratedKey(key);
-    }
-
-    function displayGeneratedKey(key) {
-      const keyDisplay = document.getElementById('key-display');
-      const keyText = document.getElementById('generated-key');
-      const copyButton = document.getElementById('copy-button');
-
-      keyText.textContent = key;
-      keyDisplay.style.display = 'block';
-
-      copyButton.onclick = function() {
-        navigator.clipboard.writeText(key).then(function() {
-          showGreenMessage();
-        });
-      };
-    }
-
-    function showGreenMessage() {
-      const message = document.getElementById('green-message');
-      message.classList.add('show');
-      setTimeout(function() {
-        message.classList.remove('show');
-      }, 3000);
-    }
-
-    function copyKey() {
-      const key = document.getElementById('generated-key').textContent;
-      navigator.clipboard.writeText(key).then(function() {
-        showGreenMessage();
-      });
-    }
-  </script>
-</body>
-</html>
+function copyKey() {
+  const key = document.getElementById('generated-key').textContent;
+  navigator.clipboard.writeText(key).then(function() {
+    showGreenMessage();
+  });
+}
